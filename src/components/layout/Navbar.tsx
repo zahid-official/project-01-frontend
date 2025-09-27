@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Logo from "./Logo";
+import ThemeToggler from "./ThemeToggler";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -112,6 +113,9 @@ const Navbar = () => {
           <Button asChild size="sm" className="text-sm">
             <a href="#">Get Started</a>
           </Button>
+
+          {/* Theme mode */}
+          <ThemeToggler />
         </div>
       </div>
     </header>
