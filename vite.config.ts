@@ -11,4 +11,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+
+  // Dev server configuration
+  server: {
+    port: 3000,
+  },
 });
