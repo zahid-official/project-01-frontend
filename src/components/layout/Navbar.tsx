@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import Logo from "./Logo";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -21,7 +22,7 @@ const navigationLinks = [
 
 const Navbar = () => {
   return (
-    <header className="border-b px-4 md:px-6 max-w-7xl w-full container mx-auto">
+    <header className="border-b py-3">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
@@ -80,9 +81,11 @@ const Navbar = () => {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="text-primary hover:text-primary/90">
-              Logo
-            </a>
+            <div className="w-40">
+              <a href="#" className="text-primary hover:text-primary/90">
+                <Logo design={"sm:block hidden"} />
+              </a>
+            </div>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
