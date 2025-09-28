@@ -4,7 +4,7 @@ interface IProps {
 
 const Logo = ({ design }: IProps) => {
   return (
-    <div className="max-w-40">
+    <div className="max-w-40 w-full">
       <svg
         data-logo="logo"
         xmlns="http://www.w3.org/2000/svg"
