@@ -1,10 +1,11 @@
 import App from "@/App";
-import DashboardLayout from "@/components/layout/DashboardLayout";
-import About from "@/pages/About";
 import Home from "@/pages/Home";
+import About from "@/pages/About";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import { createBrowserRouter } from "react-router";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import Verify from "@/pages/Verify";
 
 const Router = createBrowserRouter([
   // Common layout
@@ -31,6 +32,10 @@ const Router = createBrowserRouter([
   {
     path: "register",
     Component: Register,
+  },
+  {
+    path: "verify",
+    Component: Verify,
   },
 
   // Dashboard layout
