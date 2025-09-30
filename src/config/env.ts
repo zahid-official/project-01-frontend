@@ -4,7 +4,7 @@ interface EnvConfig {
 
 const loadEnvs = (): EnvConfig => {
   // Check missing envs
-  const requiredEnvs: string[] = ["BASE_URL"];
+  const requiredEnvs: string[] = ["VITE_BASE_URL"];
 
   requiredEnvs.forEach((key) => {
     if (!import.meta.env[key]) {
@@ -14,7 +14,7 @@ const loadEnvs = (): EnvConfig => {
 
   // Return validated envs
   return {
-    BASE_URL: import.meta.env.BASE_URL as string,
+    BASE_URL: import.meta.env.VITE_BASE_URL as string,
   };
 };
 
