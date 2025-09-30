@@ -1,12 +1,99 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import z from "zod";
+import { toast } from "sonner";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router";
-import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ButtonSubmit from "@/components/ui/button-submit";
+import InputPassword from "@/components/ui/input-password";
+import { useLoginMutation } from "@/redux/features/auth.api";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-const LoginForm = ({ className, ...props }: React.ComponentProps<"form">) => {
+// Zod schema
+const loginZodSchema = z.object({
+  // Email
+  email: z
+    .email()
+    .min(5, { error: "Email must be at least 5 characters long." })
+    .max(100, { error: "Email cannot exceed 100 characters." })
+    .trim(),
+
+  // Password
+  password: z
+    .string()
+    .min(8, { error: "Password must be at least 8 characters long." })
+
+    // Password complexity requirements
+    .regex(/^(?=.*[A-Z])/, {
+      error: "Password must contain at least 1 uppercase letter.",
+    })
+    .regex(/^(?=.*[!@#$%^&*])/, {
+      error: "Password must contain at least 1 special character.",
+    })
+    .regex(/^(?=.*\d)/, {
+      error: "Password must contain at least 1 number.",
+    })
+    .trim(),
+});
+
+const LoginForm = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  // State for loading
+  const [isLoading, setIsloading] = useState(false);
+
+  // Navigation hook
+  const navigate = useNavigate();
+
+  // RTK Query mutation hook
+  const [login] = useLoginMutation();
+
+  // useForm hook
+  const form = useForm<z.infer<typeof loginZodSchema>>({
+    resolver: zodResolver(loginZodSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // Handle onSubmit
+  const onSubmit = async (data: z.infer<typeof loginZodSchema>) => {
+    setIsloading(true);
+
+    try {
+      const result = await login(data).unwrap();
+      console.log(result);
+      toast.success("Logged in successfully");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.data.message);
+
+      // Redirect to verify if not verified
+      if (error.status === 401) {
+        navigate("/verify", { state: data.email });
+      }
+    } finally {
+      setIsloading(false);
+    }
+  };
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
+      {/* Heading */}
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Login to your account</h1>
         <p className="text-muted-foreground text-sm text-balance">
@@ -14,40 +101,64 @@ const LoginForm = ({ className, ...props }: React.ComponentProps<"form">) => {
         </p>
       </div>
 
+      {/* Form body */}
       <div className="grid gap-6">
-        {/* Email */}
-        <div className="grid gap-3">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
-        </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Email */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="john@email.com" {...field} />
+                  </FormControl>
+                  <FormDescription className="sr-only">
+                    This is your public display email.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Password */}
-        <div className="grid gap-3">
-          <div className="flex items-center">
-            <Label htmlFor="password">Password</Label>
-            <Link
-              to="/forgot-password"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              Forgot your password?
-            </Link>
-          </div>
-          <Input id="password" type="password" required />
-        </div>
+            {/* Password */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <InputPassword {...field} />
+                  </FormControl>
+                  <FormDescription className="sr-only">
+                    This is your account password.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Submin btn */}
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
+            {/* Submit btn */}
+            <ButtonSubmit
+              isLoading={isLoading}
+              value="Login"
+              loadingValue="Logging in..."
+            />
+          </form>
+        </Form>
 
+        {/* Divider */}
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">
             Or continue with
           </span>
         </div>
 
-        {/* Google login */}
-        <Button variant="outline" className="w-full">
+        {/* Google register */}
+        <Button variant="outline" className="w-full cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 262">
             <path
               fill="currentColor"
@@ -58,13 +169,14 @@ const LoginForm = ({ className, ...props }: React.ComponentProps<"form">) => {
         </Button>
       </div>
 
+      {/* Navigate to register */}
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
         <Link to="/register" className="underline underline-offset-4">
           Sign up
         </Link>
       </div>
-    </form>
+    </div>
   );
 };
 
