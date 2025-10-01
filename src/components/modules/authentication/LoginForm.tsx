@@ -34,17 +34,6 @@ const loginZodSchema = z.object({
   password: z
     .string()
     .min(8, { error: "Password must be at least 8 characters long." })
-
-    // Password complexity requirements
-    .regex(/^(?=.*[A-Z])/, {
-      error: "Password must contain at least 1 uppercase letter.",
-    })
-    .regex(/^(?=.*[!@#$%^&*])/, {
-      error: "Password must contain at least 1 special character.",
-    })
-    .regex(/^(?=.*\d)/, {
-      error: "Password must contain at least 1 number.",
-    })
     .trim(),
 });
 
@@ -80,7 +69,7 @@ const LoginForm = ({
       toast.success("Logged in successfully");
     } catch (error: any) {
       console.log(error);
-      toast.error(error.data.message);
+      toast.error(error.data.message || "Something went wrong!");
 
       // Redirect to verify if not verified
       if (error.status === 401) {
@@ -145,7 +134,7 @@ const LoginForm = ({
             <ButtonSubmit
               isLoading={isLoading}
               value="Login"
-              loadingValue="Logging in..."
+              loadingValue="Logging in"
             />
           </form>
         </Form>
