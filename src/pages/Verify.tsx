@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button } from "@/components/ui/button";
 import ButtonSubmit from "@/components/ui/button-submit";
 import {
   Form,
@@ -52,7 +51,7 @@ const Verify = () => {
     },
   });
 
-  // Handle confirmation
+  // Handle confirmation of send otp
   const handleConfirm = async () => {
     setIsloading(true);
     const otpInfo = { email };
@@ -87,7 +86,7 @@ const Verify = () => {
     }
   };
 
-  // Handle onSubmit
+  // Handle verify otp
   const onSubmit = async (data: z.infer<typeof otpZodSchema>) => {
     setIsloading(true);
     const otpInfo = { ...data, email };

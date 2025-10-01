@@ -1,8 +1,19 @@
+import type {
+  ILogin,
+  IRegister,
+  IResponse,
+  ISendOtp,
+  IVerifyOtp,
+  LoginResponse,
+  RegisterResponse,
+} from "@/types";
 import baseApi from "../baseApi";
 
+// redux toolkit query for authentication
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation({
+    // Register user
+    register: builder.mutation<RegisterResponse, IRegister>({
       query: (userInfo) => ({
         url: "/user/register",
         method: "POST",
@@ -10,7 +21,8 @@ const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-    login: builder.mutation({
+    // Login user
+    login: builder.mutation<LoginResponse, ILogin>({
       query: (payload) => ({
         url: "/auth/login",
         method: "POST",
@@ -18,7 +30,8 @@ const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-    sendOtp: builder.mutation({
+    // Send OTP
+    sendOtp: builder.mutation<IResponse<null>, ISendOtp>({
       query: (payload) => ({
         url: "/otp/send",
         method: "POST",
@@ -26,7 +39,8 @@ const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-    verifyOtp: builder.mutation({
+    // Verify OTP
+    verifyOtp: builder.mutation<IResponse<null>, IVerifyOtp>({
       query: (payload) => ({
         url: "/otp/verify",
         method: "POST",
