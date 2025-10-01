@@ -13,7 +13,7 @@ import baseApi from "../baseApi";
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Register user
-    register: builder.mutation<RegisterResponse, IRegister>({
+    register: builder.mutation<IResponse<RegisterResponse>, IRegister>({
       query: (userInfo) => ({
         url: "/user/register",
         method: "POST",
@@ -22,7 +22,7 @@ const authApi = baseApi.injectEndpoints({
     }),
 
     // Login user
-    login: builder.mutation<LoginResponse, ILogin>({
+    login: builder.mutation<IResponse<LoginResponse>, ILogin>({
       query: (payload) => ({
         url: "/auth/login",
         method: "POST",
