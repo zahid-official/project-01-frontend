@@ -67,12 +67,17 @@ const LoginForm = ({
       const result = await login(data).unwrap();
       console.log(result);
       toast.success("Logged in successfully");
+      navigate("/");
     } catch (error: any) {
       console.log(error);
       toast.error(error.data.message || "Something went wrong!");
 
       // Redirect to verify if not verified
-      if (error.status === 401) {
+      if (
+        error.status === 401 &&
+        error.data.message ===
+          "User is not verified. Please verify your email to proceed."
+      ) {
         navigate("/verify", { state: data.email });
       }
     } finally {

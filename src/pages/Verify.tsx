@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button } from "@/components/ui/button";
 import ButtonSubmit from "@/components/ui/button-submit";
 import {
   Form,
@@ -38,6 +39,7 @@ const Verify = () => {
   const [confirm, setConfirm] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const [resending, setResending] = useState(false);
+  const [timer, setTimer] = useState(120);
 
   // RTK Query mutation hook
   const [otpSend] = useSendOtpMutation();
@@ -78,6 +80,8 @@ const Verify = () => {
       const result = await otpSend(otpInfo).unwrap();
       console.log(result);
       toast.success(result.message || "OTP sent successfully");
+      setTimer(120);
+      setConfirm(true);
     } catch (error: any) {
       console.log(error);
       toast.error(error.data.message || "Something went wrong!");
@@ -107,9 +111,28 @@ const Verify = () => {
   // Redirect to home if no email in state
   useEffect(() => {
     if (!email) {
-      navigate("/");
+      navigate("/login");
     }
   }, [email, navigate]);
+
+  // Timer for otp expiry
+  useEffect(() => {
+    if (timer === 0 || !email || !confirm) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timer, confirm, email]);
 
   return (
     <>
@@ -151,19 +174,22 @@ const Verify = () => {
                 />
 
                 {/* Resend otp */}
-                <div className="text-center text-sm">
-                  Not receive a code?{" "}
+                <div className="text-center text-sm flex justify-between items-center gap-2">
+                  <p>Code expires in: {timer}s </p>
                   {resending ? (
                     <span className="underline underline-offset-4 cursor-pointer">
                       Resending<span className="loader">...</span>
                     </span>
                   ) : (
-                    <span
+                    <Button
+                      type="button"
+                      variant="link"
+                      disabled={timer !== 0}
                       onClick={handleResendOtp}
-                      className="underline underline-offset-4 cursor-pointer"
+                      className="cursor-pointer p-0"
                     >
                       Resend code
-                    </span>
+                    </Button>
                   )}
                 </div>
               </form>
