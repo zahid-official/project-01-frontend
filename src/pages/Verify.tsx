@@ -9,11 +9,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import InputOtp from "@/components/ui/input-otp";
-import { useSendOtpMutation } from "@/redux/features/auth.api";
+import {
+  useSendOtpMutation,
+  useVerifyOtpMutation,
+} from "@/redux/features/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -26,7 +29,7 @@ const otpZodSchema = z.object({
 
 const Verify = () => {
   // Navigation and location hooks
-  //! const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
 
   // State for email from location state
@@ -35,9 +38,11 @@ const Verify = () => {
   // State for confirm and loading
   const [confirm, setConfirm] = useState(false);
   const [isLoading, setIsloading] = useState(false);
+  const [resending, setResending] = useState(false);
 
   // RTK Query mutation hook
   const [otpSend] = useSendOtpMutation();
+  const [verifyOtp] = useVerifyOtpMutation();
 
   // useForm hook
   const form = useForm<z.infer<typeof otpZodSchema>>({
@@ -50,7 +55,6 @@ const Verify = () => {
   // Handle confirmation
   const handleConfirm = async () => {
     setIsloading(true);
-
     const otpInfo = { email };
 
     try {
@@ -66,24 +70,53 @@ const Verify = () => {
     }
   };
 
+  // Handle resend otp
+  const handleResendOtp = async () => {
+    setResending(true);
+    const otpInfo = { email };
+
+    try {
+      const result = await otpSend(otpInfo).unwrap();
+      console.log(result);
+      toast.success(result.message || "OTP sent successfully");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.data.message || "Something went wrong!");
+    } finally {
+      setResending(false);
+    }
+  };
+
   // Handle onSubmit
   const onSubmit = async (data: z.infer<typeof otpZodSchema>) => {
+    setIsloading(true);
     const otpInfo = { ...data, email };
-    console.log(otpInfo);
+
+    try {
+      const result = await verifyOtp(otpInfo).unwrap();
+      console.log(result);
+      toast.success(result.message || "OTP sent successfully");
+      navigate("/login");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.data.message || "Something went wrong!");
+    } finally {
+      setIsloading(false);
+    }
   };
 
   // Redirect to home if no email in state
-  //! useEffect(() => {
-  //   if (!email) {
-  //     navigate("/");
-  //   }
-  // }, [email, navigate]);
+  useEffect(() => {
+    if (!email) {
+      navigate("/");
+    }
+  }, [email, navigate]);
 
   return (
     <>
       {confirm ? (
         <div className="min-h-screen flex justify-center items-center">
-          <div className="border rounded-2xl p-9 text-center">
+          <div className="border rounded-2xl px-8 py-10 text-center">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -112,20 +145,22 @@ const Verify = () => {
                 />
 
                 {/* Verify btn */}
-                <Button type="submit" className="w-full text-base">
-                  Verify
-                </Button>
+                <ButtonSubmit
+                  isLoading={isLoading}
+                  value="Verify Code"
+                  loadingValue="Verifing"
+                />
 
                 {/* Resend otp */}
                 <div className="text-center text-sm">
                   Not receive a code?{" "}
-                  {isLoading ? (
+                  {resending ? (
                     <span className="underline underline-offset-4 cursor-pointer">
                       Resending<span className="loader">...</span>
                     </span>
                   ) : (
                     <span
-                      onClick={handleConfirm}
+                      onClick={handleResendOtp}
                       className="underline underline-offset-4 cursor-pointer"
                     >
                       Resend code
@@ -138,7 +173,7 @@ const Verify = () => {
         </div>
       ) : (
         <div className="min-h-screen flex justify-center items-center">
-          <div className="border max-w-sm rounded-2xl p-9 text-center">
+          <div className="border max-w-sm rounded-2xl px-8 py-12  text-center">
             <h3 className="text-xl font-bold">Verify your email</h3>
             <p className="text-sm pt-2 pb-4">
               We’ll send a verification code to your email {email}
