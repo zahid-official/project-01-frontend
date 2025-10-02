@@ -43,7 +43,7 @@ export interface RegisterResponse {
 }
 
 // login response
-export interface userData {
+export interface LoginResponse {
   _id: string;
   name: string;
   email: string;
@@ -54,10 +54,4 @@ export interface userData {
   auths: Auth[];
   createdAt: string;
   updatedAt: string;
-}
-
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  data: userData;
 }

@@ -4,6 +4,7 @@ import envVars from "@/config/env";
 // Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: envVars.BASE_URL,
+  withCredentials: true,
 });
 
 // Request interceptor
