@@ -186,7 +186,7 @@ const Verify = () => {
                       variant="link"
                       disabled={timer !== 0}
                       onClick={handleResendOtp}
-                      className="cursor-pointer p-0"
+                      className="p-0"
                     >
                       Resend code
                     </Button>

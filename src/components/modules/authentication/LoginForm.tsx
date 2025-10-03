@@ -164,7 +164,7 @@ const LoginForm = ({
         <Button
           onClick={googleLogin}
           variant="outline"
-          className="w-full cursor-pointer"
+          className="w-full"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 262">
             <path

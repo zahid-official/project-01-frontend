@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -10,9 +11,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useLogoutMutation } from "@/redux/features/auth.api";
+import { useProfileInfoQuery, userApi } from "@/redux/features/user.api";
+import { useAppDispatch } from "@/redux/hooks";
+import { Link } from "react-router";
+import { toast } from "sonner";
 import Logo from "./Logo";
 import ThemeToggler from "./ThemeToggler";
-import { Link } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -21,6 +26,27 @@ const navigationLinks = [
 ];
 
 const Navbar = () => {
+  // RTK Query mutation hook
+  const { data } = useProfileInfoQuery(undefined);
+  const [logout] = useLogoutMutation();
+
+  const dispatch = useAppDispatch();
+  const email = data?.data?.email;
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      const result = await logout(null).unwrap();
+
+      // reset api state
+      dispatch(userApi.util.resetApiState());
+      toast.success(result.message || "Logged out successfully");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.data.message);
+    }
+  };
+
   return (
     <header className="border-b py-3">
       <div className="flex h-16 items-center justify-between gap-4">
@@ -81,9 +107,9 @@ const Navbar = () => {
           {/* Main nav */}
           <div className="flex items-center gap-6">
             <div className="w-40">
-              <a href="#" className="text-primary hover:text-primary/90">
+              <Link to="#" className="text-primary hover:text-primary/90">
                 <Logo design={"sm:block hidden"} />
-              </a>
+              </Link>
             </div>
 
             {/* Navigation menu */}
@@ -106,9 +132,15 @@ const Navbar = () => {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button asChild className="text-sm">
-            <a href="/login">Login</a>
-          </Button>
+          {email ? (
+            <Button onClick={handleLogout} className="text-sm">
+              Logout
+            </Button>
+          ) : (
+            <Button className="text-sm">
+              <Link to="/login">Login</Link>
+            </Button>
+          )}
 
           {/* Theme mode */}
           <ThemeToggler />
