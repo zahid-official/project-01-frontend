@@ -109,7 +109,7 @@ const RegisterForm = ({
       toast.success("Account created successfully");
     } catch (error: any) {
       console.log(error);
-      toast.error(error.data.message);
+      toast.error(error.data.message || "Something went wrong!");
     } finally {
       setIsloading(false);
     }
@@ -206,7 +206,7 @@ const RegisterForm = ({
             <ButtonSubmit
               isLoading={isLoading}
               value="Create Account"
-              loadingValue="Creating Your Account..."
+              loadingValue="Creating account"
             />
           </form>
         </Form>
@@ -219,7 +219,7 @@ const RegisterForm = ({
         </div>
 
         {/* Google register */}
-        <Button variant="outline" className="w-full cursor-pointer">
+        <Button variant="outline" className="w-full">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 262">
             <path
               fill="currentColor"

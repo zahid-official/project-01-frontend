@@ -20,6 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import envVars from "@/config/env";
 
 // Zod schema
 const loginZodSchema = z.object({
@@ -34,17 +35,6 @@ const loginZodSchema = z.object({
   password: z
     .string()
     .min(8, { error: "Password must be at least 8 characters long." })
-
-    // Password complexity requirements
-    .regex(/^(?=.*[A-Z])/, {
-      error: "Password must contain at least 1 uppercase letter.",
-    })
-    .regex(/^(?=.*[!@#$%^&*])/, {
-      error: "Password must contain at least 1 special character.",
-    })
-    .regex(/^(?=.*\d)/, {
-      error: "Password must contain at least 1 number.",
-    })
     .trim(),
 });
 
@@ -70,25 +60,35 @@ const LoginForm = ({
     },
   });
 
-  // Handle onSubmit
-  const onSubmit = async (data: z.infer<typeof loginZodSchema>) => {
+  // Handle credentials login
+  const credentialsLogin = async (data: z.infer<typeof loginZodSchema>) => {
     setIsloading(true);
 
     try {
       const result = await login(data).unwrap();
       console.log(result);
-      toast.success("Logged in successfully");
+      toast.success(result.message || "Logged in successfully");
+      navigate("/");
     } catch (error: any) {
       console.log(error);
-      toast.error(error.data.message);
+      toast.error(error.data.message || "Something went wrong!");
 
       // Redirect to verify if not verified
-      if (error.status === 401) {
+      if (
+        error.status === 401 &&
+        error.data.message ===
+          "User is not verified. Please verify your email to proceed."
+      ) {
         navigate("/verify", { state: data.email });
       }
     } finally {
       setIsloading(false);
     }
+  };
+
+  // Handle goole login
+  const googleLogin = async () => {
+    window.location.href = `${envVars.BASE_URL}/auth/google`;
   };
 
   return (
@@ -104,7 +104,10 @@ const LoginForm = ({
       {/* Form body */}
       <div className="grid gap-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(credentialsLogin)}
+            className="space-y-6"
+          >
             {/* Email */}
             <FormField
               control={form.control}
@@ -145,7 +148,7 @@ const LoginForm = ({
             <ButtonSubmit
               isLoading={isLoading}
               value="Login"
-              loadingValue="Logging in..."
+              loadingValue="Logging in"
             />
           </form>
         </Form>
@@ -158,7 +161,11 @@ const LoginForm = ({
         </div>
 
         {/* Google register */}
-        <Button variant="outline" className="w-full cursor-pointer">
+        <Button
+          onClick={googleLogin}
+          variant="outline"
+          className="w-full"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 262">
             <path
               fill="currentColor"
