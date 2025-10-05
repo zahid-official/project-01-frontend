@@ -159,9 +159,9 @@ const Navbar = () => {
               Logout
             </Button>
           ) : (
-            <Button className="text-sm">
-              <Link to="/login">Login</Link>
-            </Button>
+            <Link to="/login">
+              <Button className="text-sm">Login</Button>
+            </Link>
           )}
 
           {/* Theme mode */}
