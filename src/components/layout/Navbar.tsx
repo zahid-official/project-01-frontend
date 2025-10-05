@@ -18,11 +18,15 @@ import { Link } from "react-router";
 import { toast } from "sonner";
 import Logo from "./Logo";
 import ThemeToggler from "./ThemeToggler";
+import role from "@/constants/role";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "/user", label: "Dashboard", role: role.USER },
+  { href: "/admin", label: "Dashboard", role: role.ADMIN },
+  { href: "/admin", label: "Dashboard", role: role.SUPER_ADMIN },
 ];
 
 const Navbar = () => {
@@ -32,6 +36,7 @@ const Navbar = () => {
 
   const dispatch = useAppDispatch();
   const email = data?.data?.email;
+  const userRole = data?.data?.role;
 
   // Handle logout
   const handleLogout = async () => {
@@ -116,14 +121,31 @@ const Navbar = () => {
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                      asChild
-                    >
-                      <Link to={link.href}>{link.label}</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
+                  <div key={index}>
+                    {/* Public routes */}
+                    {link.role === "PUBLIC" && (
+                      <NavigationMenuItem key={index}>
+                        <NavigationMenuLink
+                          className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                          asChild
+                        >
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+
+                    {/* Logged users routes */}
+                    {link.role === userRole && (
+                      <NavigationMenuItem key={index}>
+                        <NavigationMenuLink
+                          className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                          asChild
+                        >
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                  </div>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>

@@ -19,11 +19,12 @@ import { useProfileInfoQuery } from "@/redux/features/user.api";
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
   // RTK Query mutation hook
-  const { data: userData } = useProfileInfoQuery(undefined);
+  const { data } = useProfileInfoQuery(undefined);
+  const userRole = data?.data?.role;
 
   // Nav items based on user role
   const navItems = {
-    navMain: generateSidebar(userData?.data?.role),
+    navMain: generateSidebar(userRole),
   };
 
   return (

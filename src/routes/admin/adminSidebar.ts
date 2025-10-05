@@ -1,9 +1,13 @@
-import AddTour from "@/pages/admin/AddTour";
-import Analytics from "@/pages/admin/Analytics";
-import GetTours from "@/pages/admin/GetTours";
 import type { ISidebarItems } from "@/types";
+import { lazy } from "react";
+
+// Lazy loading
+const Analytics = lazy(() => import("@/pages/admin/Analytics"));
+const AddTour = lazy(() => import("@/pages/admin/AddTour"));
+const GetTours = lazy(() => import("@/pages/admin/GetTours"));
 
 const adminSidebarItems: ISidebarItems[] = [
+  // Dashboard
   {
     title: "Dashboard",
     items: [
@@ -14,6 +18,8 @@ const adminSidebarItems: ISidebarItems[] = [
       },
     ],
   },
+
+  // Tour management
   {
     title: "Tour Management",
     items: [
