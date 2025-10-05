@@ -1,4 +1,3 @@
-import { AppSidebar } from "@/components/ui/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -6,6 +5,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Outlet } from "react-router";
+import AppSidebar from "../ui/app-sidebar";
 
 const DashboardLayout = () => {
   return (

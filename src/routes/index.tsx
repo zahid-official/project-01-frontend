@@ -5,10 +5,10 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Verify from "@/pages/Verify";
-import Bookings from "@/pages/user/Bookings";
 import generateRoutes from "@/utils/generateRoutes";
 import { createBrowserRouter } from "react-router";
 import adminSidebarItems from "./admin/adminSidebar";
+import userSidebarItems from "./user/userSidebar";
 
 const Router = createBrowserRouter([
   // Common layout
@@ -31,19 +31,14 @@ const Router = createBrowserRouter([
   {
     path: "/admin",
     Component: DashboardLayout,
-    children: generateRoutes(adminSidebarItems),
+    children: [...generateRoutes(adminSidebarItems)],
   },
 
   // User dashboard
   {
     path: "/user",
     Component: DashboardLayout,
-    children: [
-      {
-        path: "bookings",
-        Component: Bookings,
-      },
-    ],
+    children: [...generateRoutes(userSidebarItems)],
   },
 
   // Auth

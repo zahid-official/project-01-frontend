@@ -12,28 +12,35 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import Logo from "../layout/Logo";
+import generateSidebar from "@/utils/generateSidebar";
 import { Link } from "react-router";
-import adminSidebarItems from "@/routes/admin/adminSidebar";
+import Logo from "../layout/Logo";
+import { useProfileInfoQuery } from "@/redux/features/user.api";
 
-// This is sample data.
-const data = {
-  navMain: adminSidebarItems,
-};
+const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
+  // RTK Query mutation hook
+  const { data: userData } = useProfileInfoQuery(undefined);
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  // Nav items based on user role
+  const navItems = {
+    navMain: generateSidebar(userData?.data?.role),
+  };
+
   return (
     <Sidebar {...props}>
+      {/* Header */}
       <SidebarHeader>
-        <div className="pt-4.5 flex justify-center">
-          <Link to="/">
+        <div className="pt-4.5">
+          <Link className="w-full flex justify-center items-center" to="/">
             <Logo design="" />
           </Link>
         </div>
       </SidebarHeader>
+
+      {/* Content */}
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
+        {navItems.navMain.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -53,4 +60,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarRail />
     </Sidebar>
   );
-}
+};
+
+export default AppSidebar;
