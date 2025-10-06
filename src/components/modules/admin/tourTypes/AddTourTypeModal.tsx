@@ -3,13 +3,12 @@ import { Button } from "@/components/ui/button";
 import ButtonSubmit from "@/components/ui/button-submit";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   Form,
