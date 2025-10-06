@@ -10,14 +10,6 @@ import {
 } from "@/components/ui/table";
 import { useGetAllTourTypesQuery } from "@/redux/features/tourType/tourType.api";
 
-// Interface for table item
-export interface TableItem {
-  _id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 const TourTypes = () => {
   // RTK Query mutation hook
   const { data } = useGetAllTourTypesQuery(undefined);
@@ -42,7 +34,7 @@ const TourTypes = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.data.map((item: TableItem) => (
+            {data?.data.map((item: { _id: string; name: string }) => (
               <TableRow key={item._id}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>
