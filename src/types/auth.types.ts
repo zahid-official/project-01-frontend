@@ -1,27 +1,4 @@
 /*--------------------------
-      QueryArg Types
---------------------------*/
-export interface IRegister {
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface ILogin {
-  email: string;
-  password: string;
-}
-
-export interface ISendOtp {
-  email: string;
-}
-
-export interface IVerifyOtp {
-  email: string;
-  otp: string;
-}
-
-/*--------------------------
       Result Types
 --------------------------*/
 export interface Auth {
@@ -54,4 +31,27 @@ export interface LoginResponse {
   auths: Auth[];
   createdAt: string;
   updatedAt: string;
+}
+
+/*--------------------------
+      QueryArg Types
+--------------------------*/
+export interface IRegister {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface ILogin {
+  email: string;
+  password: string;
+}
+
+export interface ISendOtp {
+  email: string;
+}
+
+export interface IVerifyOtp {
+  email: string;
+  otp: string;
 }
