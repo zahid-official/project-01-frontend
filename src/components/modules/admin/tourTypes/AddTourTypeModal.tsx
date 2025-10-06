@@ -8,7 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -78,7 +78,7 @@ const AddTourTypeModal = () => {
           <DialogTrigger asChild>
             <Button>Add Tour Type</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-sm">
+          <DialogContent className="sm:max-w-md px-7 py-12">
             {/* Dialog header */}
             <DialogHeader>
               <DialogTitle>Add Tour Type</DialogTitle>

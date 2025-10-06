@@ -3,6 +3,17 @@ import { Button } from "@/components/ui/button";
 import { useDeleteTourTypeMutation } from "@/redux/features/tourType/tourType.api";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface IProps {
   id: string;
@@ -26,9 +37,26 @@ const DeleteTourType = ({ id }: IProps) => {
 
   return (
     <div>
-      <Button onClick={handleDelete} size="sm">
-        <Trash2 />
-      </Button>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button size="sm">
+            <Trash2 />
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently remove tour
+              type's data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
