@@ -1,7 +1,8 @@
 import type { ComponentType } from "react";
-
-export type { IRegister, ILogin, ISendOtp, IVerifyOtp } from "./auth.types";
 export type { RegisterResponse, LoginResponse } from "./auth.types";
+export type { IRegister, ILogin, ISendOtp, IVerifyOtp } from "./auth.types";
+export type { TourTypeResponse } from "./tour.types";
+export type { ITourType } from "./tour.types";
 
 // IResponse for baseApi queries and mutations
 export interface IResponse<T> {

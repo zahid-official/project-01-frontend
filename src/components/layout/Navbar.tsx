@@ -11,8 +11,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useLogoutMutation } from "@/redux/features/auth.api";
-import { useProfileInfoQuery, userApi } from "@/redux/features/user.api";
+import { useLogoutMutation } from "@/redux/features/auth/auth.api";
+import { useProfileInfoQuery, userApi } from "@/redux/features/user/user.api";
 import { useAppDispatch } from "@/redux/hooks";
 import { Link } from "react-router";
 import { toast } from "sonner";

@@ -1,11 +1,11 @@
 import App from "@/App";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import About from "@/pages/About";
-import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
-import Unauthorized from "@/pages/unauthorized";
-import Verify from "@/pages/Verify";
+import About from "@/pages/public/About";
+import Home from "@/pages/public/Home";
+import Login from "@/pages/public/Login";
+import Register from "@/pages/public/Register";
+import Unauthorized from "@/pages/public/Unauthorized";
+import Verify from "@/pages/public/Verify";
 import generateRoutes from "@/utils/generateRoutes";
 import withAuth from "@/utils/withAuth";
 import { createBrowserRouter, Navigate } from "react-router";

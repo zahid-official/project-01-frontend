@@ -15,7 +15,7 @@ import {
 import generateSidebar from "@/utils/generateSidebar";
 import { Link } from "react-router";
 import Logo from "../layout/Logo";
-import { useProfileInfoQuery } from "@/redux/features/user.api";
+import { useProfileInfoQuery } from "@/redux/features/user/user.api";
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
   // RTK Query mutation hook

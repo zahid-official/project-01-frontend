@@ -12,7 +12,7 @@ import InputOtp from "@/components/ui/input-otp";
 import {
   useSendOtpMutation,
   useVerifyOtpMutation,
-} from "@/redux/features/auth.api";
+} from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

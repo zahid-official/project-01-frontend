@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useRegisterMutation } from "@/redux/features/auth.api";
+import { useRegisterMutation } from "@/redux/features/auth/auth.api";
 import ButtonSubmit from "@/components/ui/button-submit";
 import { useState } from "react";
 
