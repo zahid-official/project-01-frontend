@@ -28,7 +28,10 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Silence deprecated warning */
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src"]
 }

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ButtonSubmit from "@/components/ui/button-submit";
 import InputPassword from "@/components/ui/input-password";
-import { useLoginMutation } from "@/redux/features/auth.api";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import {
   Form,
   FormControl,

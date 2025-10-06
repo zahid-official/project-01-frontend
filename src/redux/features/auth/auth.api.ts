@@ -7,7 +7,7 @@ import type {
   LoginResponse,
   RegisterResponse,
 } from "@/types";
-import baseApi from "../baseApi";
+import baseApi from "../../baseApi";
 
 // redux toolkit query for authentication
 const authApi = baseApi.injectEndpoints({
