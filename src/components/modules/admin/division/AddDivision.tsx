@@ -20,7 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useCreateTourTypeMutation } from "@/redux/features/tourType/tourType.api";
+import { useCreateDivisionMutation } from "@/redux/features/division/division.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -28,39 +28,47 @@ import { toast } from "sonner";
 import z from "zod";
 
 // Zod schema
-const tourTypeZodSchema = z.object({
+const divisionZodSchema = z.object({
   // Email
   name: z
     .string()
     .min(2, { error: "Name must be at least 2 characters long." })
     .max(50, { error: "Name cannot exceed 50 characters." })
     .trim(),
+
+  // Description
+  description: z
+    .string({ error: "Description must be string" })
+    .max(500, { error: "Description cannot exceed 500 characters." })
+    .trim()
+    .optional(),
 });
 
-const AddTourTypeModal = () => {
+const AddDivisionModal = () => {
   // State for loading & modalOpen
   const [isLoading, setIsloading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   // RTK Query mutation hook
-  const [createTourType] = useCreateTourTypeMutation();
+  const [createDivision] = useCreateDivisionMutation();
 
   // useForm hook
-  const form = useForm<z.infer<typeof tourTypeZodSchema>>({
-    resolver: zodResolver(tourTypeZodSchema),
+  const form = useForm<z.infer<typeof divisionZodSchema>>({
+    resolver: zodResolver(divisionZodSchema),
     defaultValues: {
       name: "",
+      description: "",
     },
   });
 
   // Handle onsubmit
-  const onsubmit = async (data: z.infer<typeof tourTypeZodSchema>) => {
+  const onsubmit = async (data: z.infer<typeof divisionZodSchema>) => {
     setIsloading(true);
 
     try {
-      const result = await createTourType(data).unwrap();
+      const result = await createDivision(data).unwrap();
       console.log(result);
-      toast.success(result.message || "Tour Type created successfully");
+      toast.success(result.message || "Division successfully");
       form.reset();
       setIsOpen(false);
     } catch (error: any) {
@@ -76,15 +84,16 @@ const AddTourTypeModal = () => {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <form>
           <DialogTrigger asChild>
-            <Button>Add Tour Type</Button>
+            <Button>Add Division</Button>
           </DialogTrigger>
+
           <DialogContent className="sm:max-w-md px-7 py-12">
             {/* Dialog header */}
             <DialogHeader>
-              <DialogTitle>Add Tour Type</DialogTitle>
+              <DialogTitle>Add Division</DialogTitle>
               <DialogDescription>
-                Create a new tour type by entering a name and saving it in the
-                system.
+                Create a new division by name, description, thumbnail and saving
+                it in the system.
               </DialogDescription>
             </DialogHeader>
 
@@ -92,7 +101,7 @@ const AddTourTypeModal = () => {
             <div className="grid gap-6">
               <Form {...form}>
                 <form
-                  id="addTourType"
+                  id="addDivision"
                   onSubmit={form.handleSubmit(onsubmit)}
                   className="space-y-6"
                 >
@@ -102,15 +111,36 @@ const AddTourTypeModal = () => {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Tour Type Name</FormLabel>
+                        <FormLabel>
+                          Division Name
+                          <span className="text-red-500 -ml-1 -mt-1.5">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter division name" {...field} />
+                        </FormControl>
+                        <FormDescription className="sr-only">
+                          Enter a name that describes this division.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* description */}
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter tour type name"
+                            placeholder="Brief description (optional)"
                             {...field}
                           />
                         </FormControl>
                         <FormDescription className="sr-only">
-                          Enter a name that describes this tour type.
+                          Describe the purpose or scope of this division.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -127,7 +157,7 @@ const AddTourTypeModal = () => {
                 isLoading={isLoading}
                 value="Submit"
                 loadingValue="Submitting"
-                form="addTourType"
+                form="addDivision"
               />
             </DialogFooter>
           </DialogContent>
@@ -137,4 +167,4 @@ const AddTourTypeModal = () => {
   );
 };
 
-export default AddTourTypeModal;
+export default AddDivisionModal;
