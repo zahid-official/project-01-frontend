@@ -1,12 +1,10 @@
-import AddTourType from "@/pages/admin/tour/AddTourType";
-import GetTourTypes from "@/pages/admin/tour/GetTourTypes";
 import type { ISidebarItems } from "@/types";
 import { lazy } from "react";
 
 // Lazy loading
-const Analytics = lazy(() => import("@/pages/admin/Analytics"));
-const AddTour = lazy(() => import("@/pages/admin/tour/AddTour"));
-const GetTours = lazy(() => import("@/pages/admin/tour/GetTours"));
+const Analytics = lazy(() => import("@/pages/admin/dashboard/Analytics"));
+const Tours = lazy(() => import("@/pages/admin/tourManagement/Tours"));
+const TourTypes = lazy(() => import("@/pages/admin/tourManagement/TourTypes"));
 
 const adminSidebarItems: ISidebarItems[] = [
   // Dashboard
@@ -26,24 +24,14 @@ const adminSidebarItems: ISidebarItems[] = [
     title: "Tour Management",
     items: [
       {
-        title: "Add Tour",
-        url: "/admin/add-tour",
-        component: AddTour,
+        title: "Tours",
+        url: "/admin/tours",
+        component: Tours,
       },
       {
-        title: "All Tours",
-        url: "/admin/get-tours",
-        component: GetTours,
-      },
-      {
-        title: "Add TourType",
-        url: "/admin/add-tour-type",
-        component: AddTourType,
-      },
-      {
-        title: "All TourTypes",
-        url: "/admin/get-tour-types",
-        component: GetTourTypes,
+        title: "Tour Types",
+        url: "/admin/tour-types",
+        component: TourTypes,
       },
     ],
   },

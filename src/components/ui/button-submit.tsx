@@ -5,11 +5,13 @@ interface IProps {
   isLoading: boolean;
   value: string;
   loadingValue: string;
+  form?: string;
 }
 
-const ButtonSubmit = ({ isLoading, value, loadingValue }: IProps) => {
+const ButtonSubmit = ({ isLoading, value, loadingValue, form }: IProps) => {
   return (
     <Button
+      form={form}
       type="submit"
       disabled={isLoading}
       data-loading={isLoading || undefined}
