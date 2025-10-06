@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import UploadFile from "@/components/ui/upload-file";
 import { useCreateDivisionMutation } from "@/redux/features/division/division.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -48,6 +49,7 @@ const AddDivisionModal = () => {
   // State for loading & modalOpen
   const [isLoading, setIsloading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
 
   // RTK Query mutation hook
   const [createDivision] = useCreateDivisionMutation();
@@ -64,9 +66,12 @@ const AddDivisionModal = () => {
   // Handle onsubmit
   const onsubmit = async (data: z.infer<typeof divisionZodSchema>) => {
     setIsloading(true);
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(data));
+    formData.append("file", image as File);
 
     try {
-      const result = await createDivision(data).unwrap();
+      const result = await createDivision(formData).unwrap();
       console.log(result);
       toast.success(result.message || "Division successfully");
       form.reset();
@@ -100,6 +105,7 @@ const AddDivisionModal = () => {
             {/* Form body */}
             <div className="grid gap-6">
               <Form {...form}>
+                {/* handle form data */}
                 <form
                   id="addDivision"
                   onSubmit={form.handleSubmit(onsubmit)}
@@ -147,6 +153,9 @@ const AddDivisionModal = () => {
                     )}
                   />
                 </form>
+
+                {/* handle image file */}
+                <UploadFile setImage={setImage} />
               </Form>
             </div>
 

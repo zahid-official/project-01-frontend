@@ -1,10 +1,10 @@
-import type { DivisionResponse, IDivision, IResponse } from "@/types";
+import type { DivisionResponse, IResponse } from "@/types";
 import baseApi from "../../baseApi";
 
 export const divisionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // create division
-    createDivision: builder.mutation<IResponse<DivisionResponse>, IDivision>({
+    createDivision: builder.mutation<IResponse<DivisionResponse>, FormData>({
       query: (payload) => ({
         url: "/division/create",
         method: "POST",
@@ -14,7 +14,7 @@ export const divisionApi = baseApi.injectEndpoints({
     }),
 
     // delete division
-    deleteDivision: builder.mutation<IResponse<IDivision>, string>({
+    deleteDivision: builder.mutation<IResponse<DivisionResponse>, string>({
       query: (id) => ({
         url: `/division/${id}`,
         method: "DELETE",

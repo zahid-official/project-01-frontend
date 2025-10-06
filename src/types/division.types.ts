@@ -14,8 +14,3 @@ export interface DivisionResponse {
 /*--------------------------
       QueryArg Types
 --------------------------*/
-export interface IDivision {
-  name: string;
-  thumbnail?: string;
-  description?: string;
-}
