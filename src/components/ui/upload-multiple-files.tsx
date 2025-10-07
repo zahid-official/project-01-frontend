@@ -66,6 +66,7 @@ const UploadMultipleFiles = ({ setImages }: IProps) => {
               <Button
                 variant="outline"
                 size="sm"
+                type="button"
                 onClick={openFileDialog}
                 disabled={files.length >= maxFiles}
               >
@@ -91,6 +92,7 @@ const UploadMultipleFiles = ({ setImages }: IProps) => {
                   <Button
                     onClick={() => removeFile(file.id)}
                     size="icon"
+                    type="button"
                     className="border-background focus-visible:border-background absolute -top-2 -right-2 size-6 rounded-full border-2 shadow-none"
                     aria-label="Remove image"
                   >
@@ -112,7 +114,7 @@ const UploadMultipleFiles = ({ setImages }: IProps) => {
             <p className="text-muted-foreground text-xs">
               SVG, PNG, JPG or GIF (max. {maxSizeMB}MB)
             </p>
-            <Button variant="outline" className="mt-4" onClick={openFileDialog}>
+            <Button type="button" variant="outline" className="mt-4" onClick={openFileDialog}>
               <UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
               Select images
             </Button>
