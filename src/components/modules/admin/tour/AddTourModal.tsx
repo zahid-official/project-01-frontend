@@ -48,26 +48,31 @@ import UploadMultipleFiles from "@/components/ui/upload-multiple-files";
 import type { FileMetadata } from "@/hooks/use-file-upload";
 
 // Zod schema
-const tourZodSchema = z.object({
-  // Title
-  title: z
-    .string()
-    .min(2, { error: "Name must be at least 2 characters long." })
-    .max(50, { error: "Name cannot exceed 50 characters." })
-    .trim(),
+const tourZodSchema = z
+  .object({
+    // Title
+    title: z
+      .string()
+      .min(2, { error: "Name must be at least 2 characters long." })
+      .max(50, { error: "Name cannot exceed 50 characters." })
+      .trim(),
 
-  // Division Id
-  divisionId: z.string().min(2, { error: "Division must be selected" }),
+    // Division Id
+    divisionId: z.string().min(2, { error: "Division must be selected" }),
 
-  // TourType Id
-  tourTypeId: z.string().min(2, { error: "Tour type must be selected" }),
+    // TourType Id
+    tourTypeId: z.string().min(2, { error: "Tour type must be selected" }),
 
-  // Start Date
-  startDate: z.date({ error: "Start date is required" }),
+    // Start Date
+    startDate: z.date({ error: "Start date is required" }),
 
-  // End Date
-  endDate: z.date({ error: "End date is required" }),
-});
+    // End Date
+    endDate: z.date({ error: "End date is required" }),
+  })
+  .refine((data) => data.endDate >= data.startDate, {
+    message: "End date cannot be before start date.",
+    path: ["endDate"],
+  });
 
 const AddTourModal = () => {
   // States from react
@@ -130,7 +135,7 @@ const AddTourModal = () => {
           <DialogTrigger asChild>
             <Button>Add Tour</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md px-7 py-12">
+          <DialogContent className="sm:max-w-lg px-7 py-12">
             {/* Dialog header */}
             <DialogHeader>
               <DialogTitle>Add Tour</DialogTitle>
@@ -167,179 +172,191 @@ const AddTourModal = () => {
                     )}
                   />
 
-                  {/* Division */}
-                  <FormField
-                    control={form.control}
-                    name="divisionId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Select Division</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          disabled={divisionLoading}
-                        >
-                          {/* select trigger */}
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select a division" />
-                            </SelectTrigger>
-                          </FormControl>
-
-                          {/* select content */}
-                          <SelectContent>
-                            {divisionData?.data?.map(
-                              (item: { _id: string; name: string }) => (
-                                <SelectItem key={item._id} value={item._id}>
-                                  {item.name}
-                                </SelectItem>
-                              )
-                            )}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Tour TYpe */}
-                  <FormField
-                    control={form.control}
-                    name="tourTypeId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Select Tour Type</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          disabled={tourTypeLoading}
-                        >
-                          {/* select trigger */}
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select a tour type" />
-                            </SelectTrigger>
-                          </FormControl>
-
-                          {/* select content */}
-                          <SelectContent>
-                            {tourTypeData?.data?.map(
-                              (item: { _id: string; name: string }) => (
-                                <SelectItem key={item._id} value={item._id}>
-                                  {item.name}
-                                </SelectItem>
-                              )
-                            )}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Start Date */}
-                  <FormField
-                    control={form.control}
-                    name="startDate"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Start Date</FormLabel>
-                        <Popover
-                          open={startDateOpen}
-                          onOpenChange={setStartDateOpen}
-                        >
-                          <PopoverTrigger asChild>
+                  {/* row-2 */}
+                  <div className="flex gap-4">
+                    {/* Division */}
+                    <FormField
+                      control={form.control}
+                      name="divisionId"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Select Division</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            disabled={divisionLoading}
+                          >
+                            {/* select trigger */}
                             <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  " text-left font-normal",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a division" />
+                              </SelectTrigger>
                             </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={(date) => {
-                                field.onChange(date);
-                                setStartDateOpen(false);
-                              }}
-                              disabled={(date) =>
-                                isBefore(
-                                  startOfDay(date),
-                                  startOfDay(new Date())
-                                )
-                              }
-                              captionLayout="dropdown"
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
 
-                  {/* End Date */}
-                  <FormField
-                    control={form.control}
-                    name="endDate"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>End Date</FormLabel>
-                        <Popover
-                          open={endDateOpen}
-                          onOpenChange={setEndDateOpen}
-                        >
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  " text-left font-normal",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={(date) => {
-                                field.onChange(date);
-                                setEndDateOpen(false);
-                              }}
-                              disabled={(date) =>
-                                isBefore(
-                                  startOfDay(date),
-                                  startOfDay(new Date())
+                            {/* select content */}
+                            <SelectContent>
+                              {divisionData?.data?.map(
+                                (item: { _id: string; name: string }) => (
+                                  <SelectItem key={item._id} value={item._id}>
+                                    {item.name}
+                                  </SelectItem>
                                 )
-                              }
-                              captionLayout="dropdown"
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                              )}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Tour Type */}
+                    <FormField
+                      control={form.control}
+                      name="tourTypeId"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Select Tour Type</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            disabled={tourTypeLoading}
+                          >
+                            {/* select trigger */}
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a tour type" />
+                              </SelectTrigger>
+                            </FormControl>
+
+                            {/* select content */}
+                            <SelectContent>
+                              {tourTypeData?.data?.map(
+                                (item: { _id: string; name: string }) => (
+                                  <SelectItem key={item._id} value={item._id}>
+                                    {item.name}
+                                  </SelectItem>
+                                )
+                              )}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* row-3 */}
+                  <div className="flex gap-4">
+                    {/* Start Date */}
+                    <FormField
+                      control={form.control}
+                      name="startDate"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Start Date</FormLabel>
+                          <Popover
+                            open={startDateOpen}
+                            onOpenChange={setStartDateOpen}
+                          >
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    " text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={(date) => {
+                                  field.onChange(date);
+                                  setStartDateOpen(false);
+                                }}
+                                disabled={(date) =>
+                                  isBefore(
+                                    startOfDay(date),
+                                    startOfDay(new Date())
+                                  )
+                                }
+                                captionLayout="dropdown"
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* End Date */}
+                    <FormField
+                      control={form.control}
+                      name="endDate"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>End Date</FormLabel>
+                          <Popover
+                            open={endDateOpen}
+                            onOpenChange={setEndDateOpen}
+                          >
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    " text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={(date) => {
+                                  field.onChange(date);
+                                  setEndDateOpen(false);
+                                }}
+                                disabled={(date) =>
+                                  isBefore(
+                                    startOfDay(date),
+                                    startOfDay(new Date())
+                                  )
+                                }
+                                captionLayout="dropdown"
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </form>
 
                 {/* handle image file */}
