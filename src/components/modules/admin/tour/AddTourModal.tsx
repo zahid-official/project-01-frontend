@@ -44,6 +44,8 @@ import { useGetAllDivisionsQuery } from "@/redux/features/division/division.api"
 import { useGetAllTourTypesQuery } from "@/redux/features/tourType/tourType.api";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import UploadMultipleFiles from "@/components/ui/upload-multiple-files";
+import type { FileMetadata } from "@/hooks/use-file-upload";
 
 // Zod schema
 const tourZodSchema = z.object({
@@ -73,6 +75,7 @@ const AddTourModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
+  const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
 
   // RTK Query mutation hook
   const [createTour] = useCreateTourMutation();
@@ -104,6 +107,7 @@ const AddTourModal = () => {
 
     const formData = new FormData();
     formData.append("data", JSON.stringify(tourInfo));
+    images.forEach((image) => formData.append("files", image as File));
 
     try {
       const result = await createTour(formData).unwrap();
@@ -139,6 +143,7 @@ const AddTourModal = () => {
             {/* Form body */}
             <div className="grid gap-6">
               <Form {...form}>
+                {/* handle form data */}
                 <form
                   id="addTour"
                   onSubmit={form.handleSubmit(onsubmit)}
@@ -336,6 +341,9 @@ const AddTourModal = () => {
                     )}
                   />
                 </form>
+
+                {/* handle image file */}
+                <UploadMultipleFiles setImages={setImages} />
               </Form>
             </div>
 
