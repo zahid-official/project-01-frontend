@@ -51,7 +51,7 @@ const HeroSection = () => {
             </div>
             <div className="mt-8 flex justify-center gap-3">
               <Button className="shadow-sm transition-shadow hover:shadow">
-                Get Started
+                Explore Wandora
               </Button>
               <Button variant="outline" className="group">
                 Learn more
