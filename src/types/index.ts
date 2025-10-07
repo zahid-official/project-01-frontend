@@ -10,11 +10,14 @@ export type {
   IVerifyOtp,
 } from "./auth.types";
 
+// Division types
+export type { DivisionResponse } from "./division.types";
+
 // TourType types
 export type { TourTypeResponse, ITourType } from "./tourType.types";
 
-// Division types
-export type { DivisionResponse, IDivision } from "./division.types";
+// Tour types
+export type { TourResponse } from "./tour.types";
 
 // IResponse for baseApi queries and mutations
 export interface IResponse<T> {
